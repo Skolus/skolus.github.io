@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>skolus</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0f14;
+      --surface: rgba(255,255,255,0.04);
+      --border: rgba(255,255,255,0.07);
+      --text: #c8cdd6;
+      --muted: #5a6070;
+      --accent: #b39ddb;       /* light purple */
+      --accent-dim: rgba(179,157,219,0.15);
+      --rain-color: rgba(160,180,220,0.18);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── Rain canvas ── */
+    #rain {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ── */
+    main {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1.5rem;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* ── Heading ── */
+    .heading {
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: #dde2ec;
+      margin-bottom: 0.15em;
+    }
+
+    .heading .name {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── Links row ── */
+    .links {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35em;
+      padding: 0.3em 0.85em;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.82rem;
+      transition: border-color 0.18s, color 0.18s, background 0.18s;
+    }
+
+    .links a:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-dim);
+    }
+
+    /* twitter bird icon */
+    .links a svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
+    .links a svg.outline { fill: none; stroke: currentColor; }
+
+    /* ── Section label ── */
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+    }
+
+    /* ── Project list ── */
+    .projects {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .project {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 0.6em;
+      text-decoration: none;
+      color: var(--text);
+      padding: 0.18rem 0;
+      width: fit-content;
+    }
+
+    .project-name {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: #dde2ec;
+      text-decoration: underline;
+      text-decoration-color: var(--border);
+      text-underline-offset: 3px;
+      transition: color 0.15s, text-decoration-color 0.15s;
+    }
+
+    .project:hover .project-name {
+      color: var(--accent);
+      text-decoration-color: var(--accent);
+    }
+
+    .project-arrow {
+      color: var(--muted);
+      font-size: 0.8rem;
+      transition: color 0.15s;
+    }
+
+    .project:hover .project-arrow {
+      color: var(--accent);
+    }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 2.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .project { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="rain"></canvas>
+
+<main>
+  <div class="card">
+    <h1 class="heading">i'm <span class="name">skolus</span></h1>
+    <p class="sub">also my name is skolus</p>
+
+    <div class="links">
+      <a href="https://x.com/skoluss" target="_blank" rel="noopener">
+        <!-- Classic Twitter bird -->
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M23.954 4.569a10 10 0 0 1-2.825.775 4.958 4.958 0 0 0 2.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 0 0-8.384 4.482C7.691 8.094 4.066 6.13 1.64 3.161a4.822 4.822 0 0 0-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 0 1-2.228-.616v.061a4.923 4.923 0 0 0 3.946 4.827 4.996 4.996 0 0 1-2.212.085 4.937 4.937 0 0 0 4.604 3.417 9.868 9.868 0 0 1-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 0 0 7.557 2.209c9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63a9.936 9.936 0 0 0 2.46-2.548l-.047-.02z"/>
+        </svg>
+        twitter
+      </a>
+      <a href="https://soggybicycle.github.io/socials" target="_blank" rel="noopener">
+        <svg class="outline" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="2" y1="12" x2="22" y2="12"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+        </svg>
+        socials
+      </a>
+    </div>
+
+    <p class="section-label">projects</p>
+
+    <div class="projects">
+      <a class="project" href="https://johnkiriakou.github.io/minesweeper/" target="_blank" rel="noopener">
+        <span class="project-name">minesweeper</span>
+        <span class="project-arrow">↗</span>
+      </a>
+      <a class="project" href="https://johnkiriakou.github.io/paint/" target="_blank" rel="noopener">
+        <span class="project-name">paint</span>
+        <span class="project-arrow">↗</span>
+      </a>
+      <a class="project" href="https://johnkiriakou.github.io/uno/" target="_blank" rel="noopener">
+        <span class="project-name">uno</span>
+        <span class="project-arrow">↗</span>
+      </a>
+    </div>
+
+    <footer>
+      &copy; 2026 skolus
+    </footer>
+  </div>
+</main>
+
+<script>
+  // ── Rain ──
+  const canvas = document.getElementById('rain');
+  const ctx = canvas.getContext('2d');
+  let drops = [];
+  let animId;
+
+  function resize() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+    initDrops();
+  }
+
+  function initDrops() {
+    drops = [];
+    const count = Math.floor((canvas.width * canvas.height) / 6000);
+    for (let i = 0; i < count; i++) {
+      drops.push(newDrop(true));
+    }
+  }
+
+  function newDrop(randomY) {
+    return {
+      x:       Math.random() * canvas.width,
+      y:       randomY ? Math.random() * canvas.height : -20,
+      len:     Math.random() * 18 + 10,
+      speed:   Math.random() * 7 + 10,
+      opacity: Math.random() * 0.4 + 0.15,
+      width:   Math.random() * 0.8 + 0.4,
+    };
+  }
+
+  function drawRain() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < drops.length; i++) {
+      const d = drops[i];
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x + d.len * 0.18, d.y + d.len);
+      ctx.strokeStyle = `rgba(160,185,230,${d.opacity})`;
+      ctx.lineWidth   = d.width;
+      ctx.stroke();
+
+      d.y += d.speed;
+      d.x += d.speed * 0.18;
+
+      if (d.y > canvas.height + d.len || d.x > canvas.width + d.len) {
+        drops[i] = newDrop(false);
+        drops[i].x = Math.random() * canvas.width;
+      }
+    }
+    animId = requestAnimationFrame(drawRain);
+  }
+
+  resize();
+  drawRain();
+
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(animId);
+    resize();
+    drawRain();
+  });
+</script>
+
+</body>
+</html>
