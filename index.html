@@ -422,7 +422,7 @@
     </div>
 
     <footer>
-      &copy; 2026 skolus &nbsp;·&nbsp; <span id="j-hint">psst.. press J</span>
+      <span id="visit-count">you've visited this site -- times</span> &nbsp;·&nbsp; <span id="j-hint">psst.. press J</span>
     </footer>
   </div>
 </main>
@@ -448,6 +448,17 @@
 
   updateClock();
   setInterval(updateClock, 1000);
+
+  // ── Visit counter ──
+  (function () {
+    const KEY = 'skolus_visit_count';
+    let count = parseInt(localStorage.getItem(KEY) || '0', 10);
+    count += 1;
+    localStorage.setItem(KEY, count);
+    const label = count === 1 ? 'time' : 'times';
+    document.getElementById('visit-count').textContent =
+      `you've visited this site ${count} ${label}`;
+  })();
 
   // ── Scroll → Rain Speed ──
   const BASE_SPEED_MIN = 10, BASE_SPEED_MAX = 17;
