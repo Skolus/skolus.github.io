@@ -506,6 +506,13 @@
   const hint = document.getElementById('j-hint');
   const mobileBtn = document.getElementById('mobile-hint');
 
+  function playClick() {
+    const clickSfx = document.getElementById('click-sfx');
+    if (!clickSfx) return;
+    clickSfx.currentTime = 0;
+    clickSfx.play().catch(() => {});
+  }
+
   function randomiseRain() {
     const r = Math.floor(Math.random() * 256);
     const g = Math.floor(Math.random() * 256);
@@ -522,11 +529,12 @@
   }
 
   mobileBtn.addEventListener('click', () => {
+    playClick();
     rainColor ? resetRain() : randomiseRain();
   });
 
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'j' || e.key === 'J') randomiseRain();
+    if (e.key === 'j' || e.key === 'J') { playClick(); randomiseRain(); }
     else if (e.key === 'k' || e.key === 'K') resetRain();
   });
 
@@ -590,6 +598,7 @@
 
 
 <audio id="purr-sfx" src="assets/purr.mp3" preload="auto"></audio>
+<audio id="click-sfx" src="assets/click.mp3" preload="auto"></audio>
 <img
   id="site-cat"
   src="assets/cat.webp"
