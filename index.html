@@ -339,6 +339,13 @@
       transition: opacity 0.5s ease, visibility 0.5s ease;
     }
 
+    .enter-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.9rem;
+    }
+
     .enter-text {
       color: var(--muted);
       font-size: 1.3rem; /* Bigger, readable sizing */
@@ -348,6 +355,28 @@
 
     #enter-overlay:hover .enter-text {
       color: var(--accent); /* Subtle glow effect on hover */
+    }
+
+    .enter-no-audio {
+      background: none;
+      border: none;
+      color: var(--muted);
+      opacity: 0.6;
+      font-family: inherit;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      padding: 0.75rem 1.5rem; /* generous hitbox despite small text */
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+
+    .enter-no-audio:hover {
+      color: var(--accent);
+      opacity: 1;
+    }
+
+    #enter-overlay:has(.enter-no-audio:hover) .enter-text {
+      color: var(--muted);
     }
 
     /* Class to fade out and hide the screen */
@@ -361,7 +390,10 @@
 <body>
 
 <div id="enter-overlay">
-  <div class="enter-text">click to enter</div>
+  <div class="enter-inner">
+    <div class="enter-text">click to enter</div>
+    <button id="enter-no-audio" class="enter-no-audio" type="button">enter without audio</button>
+  </div>
 </div>
 
 <canvas id="rain"></canvas>
@@ -657,6 +689,19 @@
       rainStarted = true;
       rainAudio.play().catch((err) => console.log("Audio play blocked:", err));
     }
+  });
+
+  // "Enter without audio" — mutes rain sound before entering
+  const enterNoAudioBtn = document.getElementById('enter-no-audio');
+  enterNoAudioBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Don't also trigger the overlay's own click handler
+    rainMuted = true;
+    rainStarted = true; // Prevent later autoplay attempts
+    rainAudio.pause();
+    rainAudio.muted = true;
+    muteBtn.textContent = '♪ muted';
+    enterOverlay.classList.add('hidden');
+    document.querySelector('.card').classList.add('visible');
   });
 
   // Backup fallback: global listener just in case
